@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drive Mad Game</title>
+    <title>drivemad-unblocked-ripstar</title>
     <style>
         body {
             margin: 0;
@@ -51,15 +51,24 @@
     <button id="fullscreen-button">Fullscreen</button>
 
     <script>
-        var gameContainer = document.getElementById('game-container');
-        var iframe = document.createElement('iframe');
-        iframe.src = "https://poki.com/en/g/drive-mad";
-        iframe.allowtransparency = true;
-        iframe.allowfullscreen = true;
-        iframe.frameBorder = "0";
-        gameContainer.appendChild(iframe)
-
+        const gameContainer = document.getElementById('game-container');
         const fullscreenButton = document.getElementById('fullscreen-button');
+
+        function loadGame() {
+            const iframe = document.createElement('iframe');
+            iframe.sandbox = 'allow-scripts allow-same-origin allow-popups allow-forms'; // sandbox the iframe for security
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+
+            fetch('https://poki.com/en/g/drive-mad')
+               .then(response => response.text())
+               .then(html => {
+                    iframe.srcdoc = html; // use srcdoc instead of src
+                    gameContainer.appendChild(iframe);
+               });
+
+        }
+
 
         fullscreenButton.addEventListener('click', () => {
              if (document.fullscreenElement) {
@@ -68,6 +77,8 @@
                 gameContainer.requestFullscreen();
             }
         });
+
+        loadGame()
     </script>
 </body>
 </html>
