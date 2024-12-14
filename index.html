@@ -10,13 +10,6 @@
     position: relative; /* Required for absolute positioning of the button */
   }
 
-    #fallback-message {
-        display: none;
-        text-align: center;
-        padding: 20px;
-        color: #888;
-    }
-
   #fullscreen-button {
     position: absolute;
     top: 10px;
@@ -37,38 +30,31 @@
 
 <div id="game-container">
   <iframe src="https://poki.com/en/g/drive-mad" frameborder="0" scrolling="no" width="100%" height="100%" id="game-iframe"></iframe>
-    <div id="fallback-message">
-        <p>Sorry, the game is temporarily unavailable. Please try again later.</p>
-    </div>
   <button id="fullscreen-button">Fullscreen</button>
 </div>
-
 
 <script>
     const gameContainer = document.getElementById('game-container');
     const fullscreenButton = document.getElementById('fullscreen-button');
     const gameIframe = document.getElementById('game-iframe');
-    const fallbackMessage = document.getElementById('fallback-message');
     let retryCount = 0;
     const maxRetries = 3;
     const retryDelay = 2000; // 2 seconds
 
     function tryLoadGame() {
-         if (retryCount >= maxRetries) {
-            fallbackMessage.style.display = "block";
-             return;
-         }
-        
-         gameIframe.onload = () => {
-            fallbackMessage.style.display = 'none';
-             retryCount = 0;
+        if (retryCount >= maxRetries) {
+            return; // Just stop trying after retries
         }
         
-         gameIframe.onerror = () => {
-           console.log("Failed to load iframe from poki")
-           retryCount++;
-             setTimeout(tryLoadGame, retryDelay);
-         };
+        gameIframe.onload = () => {
+            retryCount = 0;
+        };
+
+        gameIframe.onerror = () => {
+            console.log("Failed to load iframe from poki");
+            retryCount++;
+            setTimeout(tryLoadGame, retryDelay);
+        };
     }
     
    tryLoadGame();
